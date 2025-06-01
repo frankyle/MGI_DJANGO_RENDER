@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: mgi-django-backend
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn backend_project.wsgi
+    autoDeploy: true
+    envVars:
+      - key: DJANGO_SETTINGS_MODULE
+        value: backend_project.settings
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: False
+      - key: ALLOWED_HOSTS
+        value: mgi-backend.onrender.com
+      - fromDatabase:
+          name: mgi-db
+          property: connectionString
+          key: DATABASE_URL
+
+databases:
+  - name: mgi-db
