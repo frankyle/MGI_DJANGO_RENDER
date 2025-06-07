@@ -62,17 +62,12 @@ class TradeReasonsAdmin(admin.ModelAdmin):
 
 
     def image_thumbnail(self, obj, field_name):
-        try:
-            field = getattr(obj, field_name)
-            if field and hasattr(field, 'url'):
-                return format_html('<img src="{}" width="50" height="50" />', field.url)
-            elif not field:
-                logger.warning(f"Image field '{field_name}' is empty for TradeReasons ID {obj.id}")
-            else:
-                logger.warning(f"No URL found for field '{field_name}' in TradeReasons ID {obj.id}")
-        except Exception as e:
-            logger.error(f"Error rendering image for field '{field_name}' in TradeReasons ID {obj.id}: {e}")
+        field = getattr(obj, field_name)
+        if field and hasattr(field, 'url'):
+            print(f"Image URL for '{field_name}': {field.url}")  # 👈 debug log
+            return format_html('<img src="{}" width="50" height="50" />', field.url)
         return "No image"
+
 
 
     def idea_candle_image(self, obj): return self.image_thumbnail(obj, 'idea_candle')
