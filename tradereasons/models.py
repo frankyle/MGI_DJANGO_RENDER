@@ -5,13 +5,20 @@ User = get_user_model()
 
 class TradeReasons(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    # Basic trade info
     currency_pair = models.CharField(max_length=6, null=True, blank=True)
     traders_idea_name = models.CharField(max_length=15, null=True, blank=True)
-    trade_signal = models.CharField(max_length=5, choices=(("BUYS", "BUYS"), ("SELLS", "SELLS")), null=True, blank=True)
+    trade_signal = models.CharField(
+        max_length=5,
+        choices=(("BUYS", "BUYS"), ("SELLS", "SELLS")),
+        null=True,
+        blank=True
+    )
     is_active = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
-    # Hour and custom candles
+    # Image fields for candle types and strategies
     idea_candle = models.ImageField(upload_to='idea_candles/', null=True, blank=True)
     idea_candle_two = models.ImageField(upload_to='idea_candle_two/', null=True, blank=True)
     youtube_candle = models.ImageField(upload_to='youtube/', null=True, blank=True)
@@ -30,3 +37,6 @@ class TradeReasons(models.Model):
     class Meta:
         verbose_name = "Trade reason"
         verbose_name_plural = "Trade reasons"
+
+    def __str__(self):
+        return f"{self.traders_idea_name} - {self.currency_pair or 'N/A'}"
