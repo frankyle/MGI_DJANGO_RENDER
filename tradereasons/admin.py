@@ -1,6 +1,11 @@
 from django.contrib import admin
 from django.utils.html import format_html
 from .models import TradeReasons
+import logging
+
+
+logger = logging.getLogger(__name__)
+
 
 @admin.register(TradeReasons)
 class TradeReasonsAdmin(admin.ModelAdmin):
@@ -55,11 +60,20 @@ class TradeReasonsAdmin(admin.ModelAdmin):
         }),
     )
 
+
     def image_thumbnail(self, obj, field_name):
-        field = getattr(obj, field_name)
-        if field:
-            return format_html('<img src="{}" width="50" height="50" />', field.url)
-        return None
+        try:
+            field = getattr(obj, field_name)
+            if field and hasattr(field, 'url'):
+                return format_html('<img src="{}" width="50" height="50" />', field.url)
+            elif not field:
+                logger.warning(f"Image field '{field_name}' is empty for TradeReasons ID {obj.id}")
+            else:
+                logger.warning(f"No URL found for field '{field_name}' in TradeReasons ID {obj.id}")
+        except Exception as e:
+            logger.error(f"Error rendering image for field '{field_name}' in TradeReasons ID {obj.id}: {e}")
+        return "No image"
+
 
     def idea_candle_image(self, obj): return self.image_thumbnail(obj, 'idea_candle')
     def idea_candle_two_image(self, obj): return self.image_thumbnail(obj, 'idea_candle_two')
@@ -90,3 +104,4 @@ class TradeReasonsAdmin(admin.ModelAdmin):
     blog_trade_post_candle_image.short_description = 'Blog Trade Post Candle'
     blog_mt5_post_candle_image.short_description = 'Blog MT5 Post Candle'
     stoploss_candle_image.short_description = 'Stoploss Candle'
+
