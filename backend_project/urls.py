@@ -22,22 +22,85 @@ if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 
-# TEMPORARY SUPERUSER CREATION FOR DEPLOYMENT ON RENDER
-from django.contrib.auth import get_user_model
-from django.db.utils import OperationalError
 
-User = get_user_model()
 
-try:
-    if not User.objects.filter(is_superuser=True).exists():
-        print("✅ Creating temporary superuser...")
-        User.objects.create_superuser(
-            email='magaifrank@gmail.com',
-            password='Magai!@#123',
-            first_name='Frank',
-            last_name='Magai'
-        )
-    else:
-        print("✅ Superuser already exists.")
-except OperationalError:
-    print("❌ Database not ready — skipping superuser creation.")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# # TEMPORARY SUPERUSER CREATION FOR DEPLOYMENT ON RENDER
+# from django.contrib.auth import get_user_model
+# from django.db.utils import OperationalError
+
+# User = get_user_model()
+
+# try:
+#     if not User.objects.filter(is_superuser=True).exists():
+#         print("✅ Creating temporary superuser...")
+#         User.objects.create_superuser(
+#             email='magaifrank@gmail.com',
+#             password='Magai!@#123',
+#             first_name='Frank',
+#             last_name='Magai'
+#         )
+#     else:
+#         print("✅ Superuser already exists.")
+# except OperationalError:
+#     print("❌ Database not ready — skipping superuser creation.")
