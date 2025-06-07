@@ -105,8 +105,13 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = '/persistent/media' if os.environ.get("RENDER") else os.path.join(BASE_DIR, 'media')
 
+if os.environ.get("RENDER"):
+    # Store uploaded files in a safe, writable directory
+    MEDIA_ROOT = '/var/tmp/media/'
+else:
+    MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+    
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # CORS
