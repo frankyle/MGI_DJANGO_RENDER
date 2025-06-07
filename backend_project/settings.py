@@ -4,13 +4,15 @@ from datetime import timedelta
 import dj_database_url
 import os
 
+# Load environment variables from .env
 load_dotenv()
 
+# Paths and base directory
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Security settings
 SECRET_KEY = os.environ.get('SECRET_KEY', 'your-fallback-secret')
 DEBUG = os.environ.get('DEBUG', 'True') == 'True'
-
 ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1,.vercel.app,.render.com').split(',')
 
 # Application definition
@@ -22,11 +24,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    # Third-party
     'rest_framework',
     'djoser',
     'corsheaders',
 
-    # Your apps
+    # Custom apps
     'accounts',
     'tradedetails',
     'tradereasons',
@@ -41,7 +44,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',  # For static file support
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # Serve static files in production
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -71,22 +74,15 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'backend_project.wsgi.application'
 
-# Database (Render provides DATABASE_URL)
+# Database
 DATABASES = {
     'default': dj_database_url.config(conn_max_age=600, default=os.getenv('DATABASE_URL'))
 }
 
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-
-
+# Custom user model
 AUTH_USER_MODEL = 'accounts.UserAccount'
 
+# Password validation
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
     {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
@@ -94,34 +90,34 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
+# Internationalization
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-# Static & media
+# Static files (CSS, JavaScript, Images)
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-MEDIA_URL = '/media/'
-
+# Media files (User uploads)
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-# CORS
+# CORS settings
 CORS_ALLOW_ALL_ORIGINS = True
 
-# REST Framework
+# REST framework configuration
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': ['rest_framework_simplejwt.authentication.JWTAuthentication'],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication'
+    ],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 20,
 }
 
-# JWT
+# JWT configuration
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
@@ -134,7 +130,7 @@ SIMPLE_JWT = {
     'USER_ID_CLAIM': 'user_id',
 }
 
-# Djoser
+# Djoser configuration
 DJOSER = {
     'USER_ID_FIELD': 'id',
     'LOGIN_FIELD': 'email',
@@ -145,7 +141,7 @@ DJOSER = {
     },
 }
 
-# Logging (optional)
+# Logging
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -158,4 +154,5 @@ LOGGING = {
     },
 }
 
-
+# Auto field default
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
